@@ -30,3 +30,6 @@ oc-port-forward project instance labels *ports: (_check-cmd "oc")
     POD="$(oc get pods -o=custom-columns=NAME:.metadata.name --no-headers -l app.kubernetes.io/instance="{{ instance }},{{ labels }}")"
     echo "Pod: $POD"
     while true; do oc port-forward "$POD" {{ ports }} || true; done
+
+_check-justile-relevance:
+    @which oc

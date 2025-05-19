@@ -2,3 +2,6 @@
 [no-exit-message]
 aws-login:
     source .env && export AWS_PROFILE && aws sso login
+
+_check-justile-relevance:
+    @which aws

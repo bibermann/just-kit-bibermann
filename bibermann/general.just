@@ -3,3 +3,6 @@ monitor *args:
 
 upgrade:
     @~/scripts/upgrade-arch/upgrade.sh
+
+_check-justile-relevance:
+    @[[ "$(whoami)" == "bibermann" ]]

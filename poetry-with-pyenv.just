@@ -12,3 +12,7 @@ _setup-python-subproject RECREATE="true": _check-python _check-env-file
 [no-cd]
 _poetry-install:
     poetry install
+
+[no-cd]
+_check-justile-relevance:
+    @fd -q pyproject.toml
