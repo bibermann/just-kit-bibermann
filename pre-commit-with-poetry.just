@@ -19,6 +19,30 @@ pre-commit-staged: _ensure-pre-commit
     git add .pre-commit-config.yaml
     poetry run pre-commit run
 
+# Run pre-commit for changed files
+[no-exit-message]
+[script]
+pre-commit-changed: _ensure-pre-commit
+    git add .pre-commit-config.yaml
+
+    STAGED_FILES=$(git diff --name-only --cached)
+    UNSTAGED_FILES=$(git diff --name-only)
+
+    FILES=$(echo -e "$STAGED_FILES\n$UNSTAGED_FILES" | sort -u)
+
+    if [ -n "$FILES" ]; then
+        poetry run pre-commit run --files $FILES
+    fi
+
+# Call pre-commit-changed as soon as any tracked file changes
+[no-exit-message]
+[script]
+pre-commit-loop: _ensure-pre-commit
+    trap "exit 0" SIGINT
+    while true; do
+        git ls-files | entr -cd just pre-commit-changed || true
+    done
+
 _install-pre-commit: (_setup-python-subproject "false")
     poetry run pre-commit install
 
