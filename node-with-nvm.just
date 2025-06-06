@@ -1,6 +1,6 @@
 [no-exit-message]
 _check-node:
-    @[ -s "$HOME/.nvm/nvm.sh" ] || (echo >&2 'ERROR: Please install `nvm`.' && just _install-instructions "nvm" && exit 1)
+    @[ -s "$HOME/.nvm/nvm.sh" ] || (echo >&2 'ERROR: Please install `nvm`.' && just _install-instructions "nvm")
 
 [no-cd]
 [script]
