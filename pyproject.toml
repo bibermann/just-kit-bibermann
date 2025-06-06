@@ -1,0 +1,113 @@
+[project]
+name = "just-tools"
+version = "0.1.0"
+requires-python = "~=3.12"
+dependencies = [
+  "pydantic>=2.10.4,<3",
+  "rich>=13.9.4,<14",
+  "typer>=0.15.1,<0.16",
+  "python-dotenv>=1.1.0",
+]
+
+[dependency-groups]
+testing = ["pytest>=8.3.4,<9"]
+dev = ["pyright>=1.1.391,<2", "ruff>=0.11.13,<0.12", "pre-commit>=4.0.1,<5"]
+
+[tool.uv]
+package = false
+default-groups = ["testing", "dev"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = "-ra"
+log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+log_level = "error"
+log_cli = true
+log_cli_level = "info"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+exclude = ["**/__pycache__", "**/.cache", "**/.venv/"]
+
+reportUnusedImport = true
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.12"
+pythonPlatform = "Linux"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 111
+src = ["amb/tc/tas/scripts", "tests"]
+
+[tool.ruff.lint]
+# By default, Ruff enables Flake8's F rules, along with a subset of the E rules, omitting any stylistic rules that overlap with the use of a formatter, like ruff format or Black.
+extend-select = [
+  "C90",   # mccabe
+  "I",     # isort
+  "N",     # pep8-naming
+  "D",     # pydocstyle
+  "UP",    # pyupgrade
+  "ASYNC", # flake8-async
+  "BLE",   # flake8-blind-except
+  "FBT",   # flake8-boolean-trap
+  "B",     # flake8-bugbear
+  "A",     # flake8-builtins
+  "C4",    # flake8-comprehensions
+  "DTZ",   # flake8-datetimez
+  "EM",    # flake8-errmsg
+  "ISC",   # flake8-implicit-str-concat
+  "ICN",   # flake8-import-conventions
+  "LOG",   # flake8-logging
+  "G",     # flake8-logging-format
+  "PIE",   # flake8-pie
+  "PT",    # flake8-pytest-style
+  "RSE",   # flake8-raise
+  "RET",   # flake8-return
+  "SLF",   # flake8-self
+  "SLOT",  # flake8-slots
+  "SIM",   # flake8-simplify
+  "TID",   # flake8-tidy-imports
+  "TC",    # flake8-type-checking
+  "INT",   # flake8-gettext
+  "ARG",   # flake8-unused-arguments
+  "PTH",   # flake8-use-pathlib
+  "PD",    # pandas-vet
+  "PGH",   # pygrep-hooks
+  "PL",    # Pylint
+  "TRY",   # tryceratops
+  "FLY",   # flynt
+  "NPY",   # NumPy-specific rules
+  "FAST",  # FastAPI
+  "PERF",  # Perflint
+  "FURB",  # refurb
+  "RUF",   # Ruff-specific rules
+]
+ignore = [
+  "PLW3201", # Dunder method `__rich__` has no special meaning in Python 3
+  "D10",     # Missing docstring
+  "ISC001",  # May cause conflicts when used with the formatter
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+
+[tool.ruff.lint.flake8-tidy-imports]
+banned-module-level-imports = ["tests"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.markdownlint]
+MD013.line_length = 88
+MD013.heading_line_length = 88
+MD013.code_block_line_length = 111
+MD007.indent = 4
+MD024.siblings_only = true

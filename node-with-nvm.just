@@ -18,4 +18,4 @@ _setup-node-subproject RECREATE="true": _check-node _check-env-file
 
 [no-cd]
 _check-justile-relevance:
-    @fd -q package.json
+    @[ -f package.json ]

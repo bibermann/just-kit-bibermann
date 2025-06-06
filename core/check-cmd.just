@@ -1,6 +1,6 @@
 [no-exit-message]
 _check-cmd CMD:
-    @which '{{ CMD }}' >/dev/null 2>&1 || (echo >&2 'ERROR: Please install `{{ CMD }}`.' && just _install-instructions '{{ CMD }}')
+    @command -v '{{ CMD }}' >/dev/null 2>&1 || (echo >&2 'ERROR: Please install `{{ CMD }}`.' && just _install-instructions '{{ CMD }}')
 
 [no-exit-message]
 [linux]

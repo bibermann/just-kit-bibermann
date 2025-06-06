@@ -8,4 +8,4 @@ bat-full:
     sudo tlp fullcharge
 
 _check-justile-relevance:
-    @which tlp
+    @command -v tlp

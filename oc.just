@@ -8,7 +8,7 @@ oc-login project: (_check-cmd "oc")
       oc registry login
     fi
 
-    oc project '{{ project }}'
+    oc project '{{ project }}' >&2
 
 oc-logout: (_check-cmd "oc")
     oc logout
@@ -31,5 +31,13 @@ oc-port-forward project instance labels *ports: (_check-cmd "oc")
     echo "Pod: $POD"
     while true; do oc port-forward "$POD" {{ ports }} || true; done
 
+[script]
+oc-get-secret project name data-key: (_check-cmd "oc")
+    just oc-login '{{ project }}'
+    source .env
+    export HTTPS_PROXY="$OC_PROXY"
+
+    oc get secret '{{ name }}' -o jsonpath="{.data['{{ data-key }}']}" | base64 -d
+
 _check-justile-relevance:
-    @which oc
+    @command -v oc

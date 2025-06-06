@@ -1,1 +1,10 @@
-/.idea/
+**/.idea/*
+!**/.idea/*.iml
+!**/.idea/modules.xml
+!/.idea/vcs.xml
+!/.idea/scopes/
+!/.idea/runConfigurations/
+
+/.venv/
+/node_modules/
+__pycache__/

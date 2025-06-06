@@ -3,4 +3,4 @@ bw-unlock:
   bw unlock --raw >>~/.bw_session
 
 _check-justile-relevance:
-    @which bw
+    @command -v bw
