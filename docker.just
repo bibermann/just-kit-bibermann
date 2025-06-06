@@ -3,3 +3,6 @@ docker-login:
 
 docker-logout:
     docker logout "$DOCKER_REGISTRY"
+
+_check-justile-relevance:
+    @command -v docker
