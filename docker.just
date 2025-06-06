@@ -6,3 +6,8 @@ docker-logout:
 
 _check-justile-relevance:
     @command -v docker
+
+_get-required-variables:
+    @echo "DOCKER_REGISTRY"
+    @echo "DOCKER_USER"
+    @echo "DOCKER_PASS"
