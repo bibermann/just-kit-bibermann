@@ -1,10 +1,10 @@
-bat-default:
+bat-default: (_check-cmd "tlp")
     sudo tlp setcharge
 
-bat-high:
+bat-high: (_check-cmd "tlp")
     sudo tlp setcharge 70 90
 
-bat-full:
+bat-full: (_check-cmd "tlp")
     sudo tlp fullcharge
 
 _check-justile-relevance:
