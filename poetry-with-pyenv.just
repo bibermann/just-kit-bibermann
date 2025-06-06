@@ -1,5 +1,5 @@
 [no-exit-message]
-_check-python: (_check-cmd "pyenv") (_check-cmd "poetry") (_check-cmd "make")
+_check-python: (_check-cmd "pyenv" "poetry" "make")
 
 # Setup Poetry subproject for development
 [no-cd]

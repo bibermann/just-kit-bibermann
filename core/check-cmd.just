@@ -1,6 +1,15 @@
 [no-exit-message]
-_check-cmd CMD:
-    @command -v '{{ CMD }}' >/dev/null 2>&1 || (echo >&2 'ERROR: Please install `{{ CMD }}`.' && just _install-instructions '{{ CMD }}')
+[script]
+_check-cmd *CMDS:
+    missing_commands=0
+    for cmd in "$@"; do
+      if ! command -v "$cmd" >/dev/null 2>&1; then
+        echo >&2 "ERROR: Please install '$cmd'."
+        just _install-instructions "$cmd" || true
+        missing_commands=1
+      fi
+    done
+    exit $missing_commands
 
 [no-exit-message]
 [linux]

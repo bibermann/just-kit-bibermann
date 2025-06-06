@@ -1,5 +1,5 @@
 [no-exit-message]
-_check-python: (_check-cmd "uv") (_check-cmd "make")
+_check-python: (_check-cmd "uv" "make")
 
 # Setup uv subproject for development
 [no-cd]
