@@ -41,8 +41,3 @@ oc-get-secret project name data-key: (_check-cmd "oc")
 
 _check-justile-relevance:
     @command -v oc
-
-_get-required-variables:
-    @echo "OC_API"
-    @echo "OC_USER"
-    @echo "OC_PROXY"

@@ -5,6 +5,3 @@ aws-login:
 
 _check-justile-relevance:
     @command -v aws
-
-_get-required-variables:
-    @echo "AWS_PROFILE"
