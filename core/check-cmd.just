@@ -1,15 +1,15 @@
 [no-exit-message]
 [script]
 _check-cmd *CMDS:
-    missing_commands=0
+    missing=0
     for cmd in "$@"; do
       if ! command -v "$cmd" >/dev/null 2>&1; then
         echo >&2 "ERROR: Please install '$cmd'."
         just _install-instructions "$cmd" || true
-        missing_commands=1
+        missing=1
       fi
     done
-    exit $missing_commands
+    exit $missing
 
 [no-exit-message]
 [linux]
