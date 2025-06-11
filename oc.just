@@ -14,6 +14,7 @@ oc-logout: (_check-cmd "oc")
     oc logout
 
 [script]
+[group: "debug"]
 oc-port-forward project instance labels *ports: (_check-cmd "oc") (_check-env "OC_API" "OC_USER" "OC_PROXY")
     # `labels` is a comma-separated list to identify the pod,
     # for example: "app.kubernetes.io/name=my-app"
@@ -32,6 +33,7 @@ oc-port-forward project instance labels *ports: (_check-cmd "oc") (_check-env "O
     while true; do oc port-forward "$POD" {{ ports }} || true; done
 
 [script]
+[group: "debug"]
 oc-get-secret project name data-key: (_check-cmd "oc") (_check-env "OC_API" "OC_USER" "OC_PROXY")
     just oc-login '{{ project }}'
     source .env

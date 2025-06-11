@@ -1,5 +1,6 @@
 # Run pre-commit for all files
 [no-exit-message]
+[group: "dev"]
 pre-commit: _ensure-pre-commit
     poetry run pre-commit run -a
 
@@ -7,6 +8,7 @@ pre-commit: _ensure-pre-commit
 [no-exit-message]
 [no-cd]
 [script]
+[group: "dev"]
 pre-commit-here: _ensure-pre-commit
     GIT_ROOT="$(git rev-parse --show-toplevel)"
     CURRENT_DIR="$PWD"
@@ -15,6 +17,7 @@ pre-commit-here: _ensure-pre-commit
 
 # Run pre-commit for staged files (like `git commit` would)
 [no-exit-message]
+[group: "dev"]
 pre-commit-staged: _ensure-pre-commit
     git add .pre-commit-config.yaml
     poetry run pre-commit run
@@ -22,6 +25,7 @@ pre-commit-staged: _ensure-pre-commit
 # Run pre-commit for changed files
 [no-exit-message]
 [script]
+[group: "dev"]
 pre-commit-changed: _ensure-pre-commit
     git add .pre-commit-config.yaml
 
@@ -37,6 +41,7 @@ pre-commit-changed: _ensure-pre-commit
 # Call pre-commit-changed as soon as any tracked file changes
 [no-exit-message]
 [script]
+[group: "dev"]
 pre-commit-loop: _ensure-pre-commit
     trap "exit 0" SIGINT
     while true; do

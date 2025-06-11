@@ -1,6 +1,7 @@
 # Setup subproject for development
 [no-exit-message]
 [no-cd]
+[group: "maintenance"]
 setup-subproject RECREATE="true":
     @if [ -f pyproject.toml ]; then just _setup-python-subproject {{ RECREATE }}; fi
     @if [ -f package.json ]; then just _setup-node-subproject {{ RECREATE }}; fi

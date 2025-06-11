@@ -2,6 +2,7 @@ ENV_TEMPLATE := ".env.template"
 REQUIRED_FILES := ".env"
 
 # Configure project for some environment
+[group: "setup"]
 configure ENV="dev":
     [ -f .env ] || cp '{{ ENV_TEMPLATE }}' .env
     @just _check-env-file
