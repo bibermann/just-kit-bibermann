@@ -1,7 +1,7 @@
 [project]
 name = "just-tools"
 version = "0.1.0"
-requires-python = "~=3.12"
+requires-python = "~=3.12.2"
 dependencies = [
   "pydantic>=2.10.4,<3",
   "rich>=13.9.4,<14",
