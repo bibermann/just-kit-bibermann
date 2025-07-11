@@ -1,131 +1,75 @@
-# just-kit
+# just-kit by Fabian
 
-A kit of reusable tools and [just](https://github.com/casey/just) recipes
-to ease your daily workflows and maintenance tasks.
+## Usage
 
-Designed as an import manager for your project's `justfile`,
-this kit provides a convenient `*.just` file selection tool
-establishing a flexible way to share useful helper utilities
-with the community and your colleagues.
+### Preconditions
 
-## Enhance your project
+#### [just-kit](https://github.com/bibermann/just-kit)
 
-From within your project root, run `setup.sh` from this repository.
+Clone <https://github.com/bibermann/just-kit> to `<just-kit directory>`
+(replace by proper location, e.g. `~/.just/kit`).
 
-If you already have a `justfile`, it gets extended, otherwise it's created for you.
+#### Naming
 
-It will enable and run the `pick` recipe,
-which presents you with a pre-filtered list of `*.just` files to pick from.
+- With _this project_ I refer to the project containing this README.
+- With _example project_ I refer to your project where you want to enable the tools.
 
-Additionally, a `just-bash` symlink is created
-that you may source using `source just-bash`
-to profit from auto-completion for Typer scripts.
-It also runs `nvm use` for you.
+### Setup
 
-### Re-configure (select just files to import)
+Clone _this project_ to a proper location, e.g.: `~/.just/bibermann`
 
-Run `just pick` from within your project tree.
-This is a convenience tool to manage the imports of your project's `justfile`.
+#### Enhance an _example project_
 
-When there are duplicate recipes, you are asked to choose
-which `*.just` file containing the conflicting recipe(s) should override the other,
-defining the import order.
-Your selection is remembered through a comment next to the import statement.
+1. If the project roots of _just-kit_ or _this project_ are not within a `.just` directory
+   in one of the _example project_'s parent directories, add the following line
+   to the `.env` file in the _example project_ root
+   (replace with proper paths or skip paths already in proper parent directories):
 
-## Adding features
+   ```bash
+   EXTRA_JUST_ROOTS="<just-kit directory>:<this project directory>"
+   ```
 
-All `*.just` files located in parent directories and `.just` directories within them
-are considered candidates for the `*.just` file selection.
+2. In an _example project_'s root, run `<just-kit directory>/setup.sh`
+   (replace `<just-kit directory>` with the _just-kit_ repository location).
+3. Select and confirm all `*.just` files you want to use from within the _example project_.
 
-To add `*.just` files from other locations using `just pick`,
-add or extend `EXTRA_JUST_ROOTS` variable with the respective paths
-(either in the environment or in the `.env` file in your project root).
-Multiple paths are separated with `:`.
+Hints:
 
-Run `just pick` to select them.
-
-### Hiding just files
-
-A `_check-justile-relevance` recipe may be added to a `*.just` file
-to be able to hide it from the list if not relevant for your current project
-(non-zero exit code will hide it).
-
-Example recipe to hide a `*.just` file when there is no `poetry` tool installed:
-
-```just
-_check-justile-relevance:
-    @command -v poetry
-```
-
-Example recipe to hide a `*.just` file when there is no `.env` file in your project's root:
-
-```just
-[no-cd]
-_check-justile-relevance:
-    @[ -f .env ]
-```
-
-## Running python scripts
-
-You can forward a command to a python app.
-
-```just
-[no-cd]
-my-python-app *ARGS:
-    @"{{justfile_directory()}}/scripts/my-python-app-wrapper-script.sh" "$@"
-```
-
-Example for a wrapper script that uses `poetry` from within your project:
-`scripts/my-python-app-wrapper-script.sh`:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-GIT_ROOT="$(git rev-parse --show-toplevel)"
-PARENT_DIR="$(dirname -- "${BASH_SOURCE[0]}")"
-
-PYTHONPATH="$PARENT_DIR" poetry run -P "${GIT_ROOT}" python "${PARENT_DIR}/my-app.py" "$@"
-```
-
-Example for a wrapper script using `uv` from within this _just tools_ project:
-`scripts/my-python-app-wrapper-script.sh`:
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-PARENT_DIR="$(dirname -- "${BASH_SOURCE[0]}")"
-
-uv run --project "${PARENT_DIR}" "${PARENT_DIR}/my-app.py" "$@"
-```
-
-### Auto-completion with Typer
-
-Running `source just-bash` will enable auto-completion for Typer apps
-when their recipe has the special argument `*TYPER_ARGS`.
-
-Example for a just recipe that will have auto-completion:
-
-```just
-[no-cd]
-my-typer-app *TYPER_ARGS:
-    @"{{justfile_directory()}}/scripts/my-typer-app-wrapper-script.sh" "$@"
-```
-
-Example for a just recipe that will have auto-completions using a separate completer:
-
-```just
-[no-cd]
-[script]
-my-app *TYPER_ARGS:
-    "{{justfile_directory()}}/scripts/my-non-typer-app.sh" "$@"
-    exit 0
-    "{{justfile_directory()}}/scripts/my-typer-app-wrapper-script.sh" # last command is used as completer
-```
+- To update the selection, run `just pick`.
+- To enhance your bash session, run `source just-bash` (this is not permanent).
 
 ## Development
 
+### Preconditions
+
+#### just-kit
+
+Read and understand the _just-kit_ README.
+
+### How to extend
+
+Instead of contributing to this project, you may create your own recipes,
+eventually replacing a `*.just` file in this project with your version
+by simply switching through `just pick`.
+
 ### Setup for development
 
-Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
+1. If the project root of _just-kit_ is not within a `.just` directory
+   in one of _this project_'s parent directories, add the following line
+   to the `.env` file in _this project_'s root
+   (replace `<just-kit directory>` with the _just-kit_ repository location):
+
+   ```bash
+   EXTRA_JUST_ROOTS="<just-kit directory>"
+   ```
+
+2. In _this project_'s root, run `<just-kit directory>/setup.sh`
+   (replace `<just-kit directory>` with the _just-kit_ repository location).
+3. Select and confirm those options:
+   - `core`
+   - `pre-commit-with-uv`
+   - `uv`
+4. When asked to choose the overriding path,
+   select `pre-commit-with-uv.just` and `uv.just` respectively over `core.just`
+   (press `2` and `[Enter]` two times).
+5. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
