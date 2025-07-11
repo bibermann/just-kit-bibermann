@@ -63,3 +63,6 @@ _install-instructions-for-dir DIR CMD:
         exit 1
       fi
     done
+
+_check-justile-relevance:
+    false

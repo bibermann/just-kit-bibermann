@@ -8,3 +8,6 @@ setup-subproject RECREATE="true":
     @if ! [ -f pyproject.toml ] && ! [ -f package.json ]; then \
        echo >&2 "ERROR: Run this inside a subproject's directory." && exit 1; \
      fi
+
+_check-justile-relevance:
+    false

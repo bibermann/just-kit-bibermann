@@ -10,3 +10,6 @@ _check-env *VARS:
       fi
     done
     exit $missing
+
+_check-justile-relevance:
+    false

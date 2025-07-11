@@ -11,3 +11,6 @@ _setup-node-subproject RECREATE="true":
 _check-env-file:
 
 _ensure-pre-commit:
+
+_check-justile-relevance:
+    false
