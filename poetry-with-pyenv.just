@@ -15,4 +15,4 @@ _poetry-install:
 
 [no-cd]
 _check-justile-relevance:
-    @[ -f pyproject.toml ] && [ -f poetry.lock ]
+    @[ -n "$(find . -name "poetry.lock" -type f -print -quit)" ]

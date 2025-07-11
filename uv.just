@@ -9,4 +9,4 @@ _setup-python-subproject RECREATE="true": _check-python _check-env-file
 
 [no-cd]
 _check-justile-relevance:
-    @[ -f pyproject.toml ] && [ -f uv.lock ]
+    @[ -n "$(find . -name "uv.lock" -type f -print -quit)" ]
