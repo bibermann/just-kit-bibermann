@@ -7,6 +7,5 @@ _setup-python-subproject RECREATE="true": _check-python _check-env-file
     ! {{ RECREATE }} || ${OFFLINE:-false} || rm -rf .venv
     uv sync
 
-[no-cd]
 _check-justile-relevance:
     @[ -n "$(find . -name "uv.lock" -type f -print -quit)" ]

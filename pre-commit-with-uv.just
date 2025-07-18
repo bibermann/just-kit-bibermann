@@ -54,6 +54,5 @@ _install-pre-commit: (_setup-python-subproject "false")
 _ensure-pre-commit:
     @{ [ -f .git/hooks/pre-commit ] && [ uv.lock -ot .git/hooks/pre-commit ]; } || just _install-pre-commit
 
-[no-cd]
 _check-justile-relevance:
     @[ -f .pre-commit-config.yaml ] && [ -f uv.lock ]

@@ -16,6 +16,5 @@ _setup-node-subproject RECREATE="true": _check-node _check-env-file
     echo 'NOTE: Please run `nvm use` before running npm commands.'
     echo 'NOTE: You need to run `nvm use` again if you start a new shell session.'
 
-[no-cd]
 _check-justile-relevance:
     @[ -n "$(find . -name "package.json" -type f -print -quit)" ]

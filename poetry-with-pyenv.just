@@ -13,6 +13,5 @@ _setup-python-subproject RECREATE="true": _check-python _check-env-file
 _poetry-install:
     poetry install
 
-[no-cd]
 _check-justile-relevance:
     @[ -n "$(find . -name "poetry.lock" -type f -print -quit)" ]
