@@ -69,7 +69,4 @@ by simply switching through `just pick`.
    - `core`
    - `pre-commit-with-uv`
    - `uv`
-4. When asked to choose the overriding path,
-   select `pre-commit-with-uv.just` and `uv.just` respectively over `core.just`
-   (press `2` and `[Enter]` two times).
-5. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
+4. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
