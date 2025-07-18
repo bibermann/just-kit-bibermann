@@ -1,3 +1,6 @@
+/justfile
+/just-bash
+
 **/.idea/*
 !**/.idea/*.iml
 !**/.idea/modules.xml
