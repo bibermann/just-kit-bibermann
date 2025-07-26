@@ -5,13 +5,13 @@ REQUIRED_FILES := ".env"
 [group: "setup"]
 configure ENV="dev":
     [ -f .env ] || cp '{{ ENV_TEMPLATE }}' .env
-    @just _check-env-file
+    @just _check-dot-env
 
     @if [ "{{ ENV }}" = "dev" ]; then just _ensure-pre-commit; fi
 
 [no-exit-message]
 [script]
-_check-env-file:
+_check-dot-env:
     for file in {{ REQUIRED_FILES }}; do
       if [ ! -f "$file" ]; then
         echo >&2 "ERROR: File \`$file\` not found. Please run \`just configure\` first."

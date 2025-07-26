@@ -10,7 +10,7 @@ _setup-node-subproject RECREATE="true":
     echo >&2 "ERROR: No node tasks added to justfile."
     exit 1
 
-_check-env-file:
+_check-dot-env:
 
 _ensure-pre-commit:
 

@@ -4,7 +4,7 @@ _check-node:
 
 [no-cd]
 [script]
-_setup-node-subproject RECREATE="true": _check-node _check-env-file
+_setup-node-subproject RECREATE="true": _check-node _check-dot-env
     . "$HOME/.nvm/nvm.sh"
 
     nvm install --latest-npm
