@@ -1,5 +1,6 @@
 [no-exit-message]
 [script]
+[positional-arguments]
 _check-env *VARS:
     [ -f .env ] && source .env
     missing=0

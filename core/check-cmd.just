@@ -1,5 +1,6 @@
 [no-exit-message]
 [script]
+[positional-arguments]
 _check-cmd *CMDS:
     missing=0
     for cmd in "$@"; do
