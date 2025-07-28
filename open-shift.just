@@ -1,6 +1,5 @@
 [script]
 oc-login project: (_check-cmd "oc") (_check-env "OC_API" "OC_USER" "OC_PROXY")
-    source .env
     export HTTPS_PROXY="$OC_PROXY"
 
     if ! oc whoami >/dev/null 2>&1; then
@@ -25,7 +24,6 @@ oc-port-forward project instance labels *ports: (_check-cmd "oc") (_check-env "O
     [ ! -z '{{ ports }}' ] || { echo >&2 'ERROR: Specify port mappings.'; exit 1; }
 
     just oc-login '{{ project }}'
-    source .env
     export HTTPS_PROXY="$OC_PROXY"
 
     POD="$(oc get pods -o=custom-columns=NAME:.metadata.name --no-headers -l app.kubernetes.io/instance="{{ instance }},{{ labels }}")"
@@ -36,7 +34,6 @@ oc-port-forward project instance labels *ports: (_check-cmd "oc") (_check-env "O
 [group: "debug"]
 oc-get-secret project name data-key: (_check-cmd "oc") (_check-env "OC_API" "OC_USER" "OC_PROXY")
     just oc-login '{{ project }}'
-    source .env
     export HTTPS_PROXY="$OC_PROXY"
 
     oc get secret '{{ name }}' -o jsonpath="{.data['{{ data-key }}']}" | base64 -d

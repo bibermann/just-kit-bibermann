@@ -2,7 +2,6 @@
 [script]
 [positional-arguments]
 _check-env *VARS:
-    [ -f .env ] && source .env
     missing=0
     for var in "$@"; do
       if [ -z "${!var:-}" ]; then
