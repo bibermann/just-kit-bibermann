@@ -68,5 +68,5 @@ by simply switching through `just pick`.
 3. Select and confirm those options:
    - `core`
    - `pre-commit-with-uv`
-   - `setup-uv`
+   - `uv-setup`
 4. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
