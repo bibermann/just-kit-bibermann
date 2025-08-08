@@ -2,12 +2,15 @@
 
 ## Usage
 
-### Preconditions
+### Prerequisites
 
 #### [just-kit](https://github.com/bibermann/just-kit)
 
-Clone <https://github.com/bibermann/just-kit> to `<just-kit directory>`
-(replace by proper location, e.g. `~/.just/kit`).
+Clone <https://github.com/bibermann/just-kit> to a proper location, e.g.:
+
+```bash
+git clone https://github.com/bibermann/just-kit ~/.just/kit
+```
 
 #### Naming
 
@@ -16,7 +19,11 @@ Clone <https://github.com/bibermann/just-kit> to `<just-kit directory>`
 
 ### Setup
 
-Clone _this project_ to a proper location, e.g.: `~/.just/bibermann`
+Clone _this project_ to a proper location, e.g.:
+
+```bash
+git clone https://github.com/bibermann/just-kit-bibermann ~/.just/bibermann
+```
 
 #### Enhance an _example project_
 
@@ -29,8 +36,7 @@ Clone _this project_ to a proper location, e.g.: `~/.just/bibermann`
    EXTRA_JUST_ROOTS="<just-kit directory>:<this project directory>"
    ```
 
-2. In an _example project_'s root, run `<just-kit directory>/setup.sh`
-   (replace `<just-kit directory>` with the _just-kit_ repository location).
+2. In an _example project_'s root, run `<just-kit directory>/setup`, e.g. `~/.just/kit/setup`.
 3. Select and confirm all `*.just` files you want to use from within the _example project_.
 
 Hints:
@@ -40,7 +46,7 @@ Hints:
 
 ## Development
 
-### Preconditions
+### Prerequisites
 
 #### just-kit
 
@@ -63,8 +69,7 @@ by simply switching through `just pick`.
    EXTRA_JUST_ROOTS="<just-kit directory>"
    ```
 
-2. In _this project_'s root, run `<just-kit directory>/setup.sh`
-   (replace `<just-kit directory>` with the _just-kit_ repository location).
+2. In _this project_'s root, run `<just-kit directory>/setup`, e.g. `~/.just/kit/setup`.
 3. Select and confirm those options:
    - `core`
    - `pre-commit-with-uv`
