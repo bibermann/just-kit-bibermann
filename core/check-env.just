@@ -1,7 +1,7 @@
 [no-exit-message]
 [script]
 [positional-arguments]
-_check-env *VARS:
+_check-env *VARS: _check-dot-env
     missing=0
     for var in "$@"; do
       if [ -z "${!var:-}" ]; then
