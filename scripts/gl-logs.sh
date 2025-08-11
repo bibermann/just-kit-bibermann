@@ -8,22 +8,8 @@ export HTTPS_PROXY="$OC_PROXY"
 # Check if required arguments are provided
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <merge_request_id> <job_name>"
-  echo "Environment variables required:"
-  echo "  GITLAB_TOKEN: Your GitLab personal access token"
-  echo "  GITLAB_PROJECT_ID: The ID of your GitLab project"
   echo "Options:"
   echo "  --stream: Keep watching the job logs while the job is running"
-  exit 1
-fi
-
-# Check if required environment variables are set
-if [ -z "$GITLAB_TOKEN" ]; then
-  echo "Error: GITLAB_TOKEN environment variable is not set"
-  exit 1
-fi
-
-if [ -z "$GITLAB_PROJECT_ID" ]; then
-  echo "Error: GITLAB_PROJECT_ID environment variable is not set"
   exit 1
 fi
 
@@ -175,5 +161,3 @@ else
   "${curl_gitlab_api[@]}" \
     "$GITLAB_API/projects/$GITLAB_PROJECT_ID/jobs/$JOB_ID/trace"
 fi
-
-exit 0
