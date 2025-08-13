@@ -17,10 +17,10 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
     """
     # Regex patterns
     begin_runs_regex = r"^==+ test session starts =="
-    search_test_run_regex = rf"^tests/.*::{re.escape(test_name)}\s*"
+    search_test_run_regex = rf"^tests/.*::{re.escape(test_name).replace('::', r'(::|\.)')}\s*"
     print_test_run_until_regex = r"^(tests/.*::|==)"
     begin_summaries_regex = r"^==+ (FAILURES|ERRORS) =="
-    search_test_summary_regex = rf"^__.*{re.escape(test_name)} __"
+    search_test_summary_regex = rf"^_.*{re.escape(test_name).replace('::', r'(::|\.)')} _"
     print_test_summary_until_regex = r"^(--+ Captured log call --|__|==)"
 
     # State tracking
