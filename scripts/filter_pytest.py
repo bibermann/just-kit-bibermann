@@ -6,9 +6,16 @@ Reads pytest output from stdin and prints test run and summary information.
 import argparse
 import re
 import sys
+import typing
+
+import rich.box
+import rich.console
+import rich.panel
+
+console = rich.console.Console()
 
 
-def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR0912
+def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR0912, PLR0915
     """Filter pytest output for a specific test.
 
     Args:
@@ -17,17 +24,32 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
     """
     # Regex patterns
     begin_runs_regex = r"^==+ test session starts =="
-    search_test_run_regex = rf"^tests/.*::{re.escape(test_name).replace('::', r'(::|\.)')}\s*"
+    search_test_run_regex = rf"^(tests/.*::{re.escape(test_name).replace('::', r'(::|\.)')})(\s?.*)"
     print_test_run_until_regex = r"^(tests/.*::|==)"
     begin_summaries_regex = r"^==+ (FAILURES|ERRORS) =="
     search_test_summary_regex = rf"^_.*{re.escape(test_name).replace('::', r'(::|\.)')} _"
     print_test_summary_until_regex = r"^(--+ Captured log call --|__|==)"
+    begin_short_summary_regex = r"^==+ short test summary info =="
+    summary_test_regex = rf"^(ERROR|FAILED) tests/.*::{re.escape(test_name)}(?:\s|$)"
+    summary_some_test_regex = r"^(ERROR|FAILED) tests/[^:]*::([^\s]+)(?:\s|$)"
+    summary_stats_regex = r"^==+ \d+ x?(failed|error|skipped|passed)"
 
     # State tracking
-    in_test_runs = False
-    printing_test_run = False
-    in_summaries: bool | str = False
-    printing_test_summary = False
+    in_test_runs: bool = False
+    printing_test_run: bool = False
+    in_summaries: typing.Literal[False] | str = False
+    in_short_summaries: typing.Literal[False] | str = False
+    printing_test_summary: bool = False
+
+    rich.print(
+        rich.panel.Panel(
+            test_name,
+            style="b bright_red",
+            border_style="bright_red",
+            box=rich.box.DOUBLE,
+            expand=False,
+        )
+    )
 
     for line_ in lines:
         line = line_.rstrip("\n")
@@ -47,9 +69,10 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
         # Handle test runs section
         if in_test_runs:
             # Check if this line matches our target test
-            if re.match(search_test_run_regex, line):
+            if match := re.match(search_test_run_regex, line):
                 printing_test_run = True
-                print(line, flush=True)
+                console.print(match.group(1), style="bright_red", end="")
+                console.print(match.group(2))
                 continue
 
             # If we're printing a test run, check if we should stop
@@ -57,7 +80,7 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
                 if re.match(print_test_run_until_regex, line):
                     printing_test_run = False
                 else:
-                    print(line, flush=True)
+                    rich.print(line)
                 continue
 
         # Handle summaries section
@@ -65,17 +88,36 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
             # Check if this line matches our target test summary
             if re.match(search_test_summary_regex, line):
                 printing_test_summary = True
-                print(in_summaries)
-                print(line, flush=True)
+                console.print(in_summaries, style="b bright_red")
+                rich.print(line)
                 continue
 
             # If we're printing a test summary, check if we should stop
             if printing_test_summary:
                 if re.match(print_test_summary_until_regex, line):
+                    in_summaries = False
                     printing_test_summary = False
                 else:
-                    print(line, flush=True)
+                    rich.print(line)
+                    continue
+
+        if re.match(begin_short_summary_regex, line):
+            in_short_summaries = line
+            continue
+
+        if in_short_summaries:
+            if re.match(summary_test_regex, line):
+                printing_test_summary = True
+                console.print(in_short_summaries, style="b bright_red")
+                rich.print(line)
                 continue
+
+            if printing_test_summary:
+                if re.match(summary_some_test_regex, line) or re.match(summary_stats_regex, line):
+                    in_short_summaries = False
+                    printing_test_summary = False
+                    continue
+                rich.print(line)
 
 
 def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR0915
@@ -94,15 +136,19 @@ def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR091
 
     passed_counter = 0
 
+    def print_passed():
+        nonlocal passed_counter
+        if passed_counter > 0:
+            print("PASSED", f"{passed_counter} tests")
+            passed_counter = 0
+
     def print_info(status: str, test_name: str):
         nonlocal passed_counter
         if status == "PASSED":
             passed_counter += 1
         else:
-            if passed_counter > 0:
-                print("PASSED", f"{passed_counter} tests", flush=True)
-                passed_counter = 0
-            print(status, test_name, flush=True)
+            print_passed()
+            print(status, test_name)
 
     for line_ in lines:
         line = line_.rstrip("\n")
@@ -114,7 +160,8 @@ def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR091
             continue
 
         if re.match(summary_stats_regex, line):
-            print(line, file=sys.stderr, flush=True)
+            print_passed()
+            print(line)
             break
 
         if in_summary:
@@ -146,6 +193,7 @@ def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR091
         # Stop processing when we hit the summary section or end
         if re.match(print_test_run_until_regex, line):
             in_summary = True
+            print_passed()
             continue
 
     # Handle case where output ends without reaching end of run

@@ -12,19 +12,21 @@ filter-pytest *TEST_NAMES: (_check-cmd "uv")
         | uv run --project "{{source_directory()}}" "{{source_directory()}}/scripts/filter_pytest.py" \
         | tee >({{source_directory()}}/scripts/color-status.sh >&2)
       )"
-      if [[ -z "${TESTS}" ]]; then
-        TEST_NAMES=
+      if [[ -z "${TESTS}" ]]; then exit 0; fi
+      options=()
+      while IFS= read -r line; do
+        if [[ -n "$line" ]]; then
+          status="${line%% *}"
+          if [[ "$status" == "PASSED" || "$status" == "SKIPPED" || "$status" == =* ]]; then continue; fi
+          test_name="${line#* }"
+          options+=("$test_name" "$status" off)
+        fi
+      done <<< "$TESTS"
+      if [[ ${#options[@]} -eq 0 ]]; then exit 0; fi
+      read -p "Press enter to see test details" </dev/tty
+      if [[ ${#options[@]} -eq 3 ]]; then
+        TEST_NAMES="${options[0]}"
       else
-        read -p "Press enter to see test details" </dev/tty
-        options=()
-        while IFS= read -r line; do
-          if [[ -n "$line" ]]; then
-            status="${line%% *}"
-            if [[ "$status" == "PASSED" || "$status" == "SKIPPED" ]]; then continue; fi
-            test_name="${line#* }"
-            options+=("$test_name" "$status" off)
-          fi
-        done <<< "$TESTS"
         cmd=(dialog --separate-output --checklist "Select tests:" 0 0 0)
         if ! TEST_NAMES="$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)"; then
           clear -x
