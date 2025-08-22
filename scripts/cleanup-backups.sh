@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Backup cleanup script with snapper-like retention policy
-# Usage: ./backup-cleanup.sh [backup_directory] [--dry-run]
+# Usage: ./backup-cleanup.sh [BACKUP_DIRECTORY] [--name NAME] [--dry-run]
 
 # Configuration - adjust these values as needed
 KEEP_LAST=7     # Keep last 7 backups regardless of age
@@ -23,17 +23,17 @@ BACKUP_REGEX="backup"
 while [[ $# -gt 0 ]]; do
   case $1 in
   --name)
-    BACKUP_REGEX="$1"
-    shift
+    BACKUP_REGEX="$2"
+    shift 2
     ;;
   --dry-run)
     DRY_RUN=true
     shift
     ;;
   --help | -h)
-    echo "Usage: $0 [backup_directory] [--name] [--dry-run]"
-    echo "  backup_directory: Directory containing backup folders/files (default: current directory)"
-    echo "  --name: Regular expression, additionally to date/time (default: $BACKUP_REGEX)"
+    echo "Usage: $0 [BACKUP_DIRECTORY] [--name NAME] [--dry-run]"
+    echo "  BACKUP_DIRECTORY: Directory containing backup folders/files (default: current directory)"
+    echo "  NAME: Regular expression, additionally to date/time (default: $BACKUP_REGEX)"
     echo "  --dry-run: Show what would be deleted without actually deleting"
     echo ""
     echo "Retention policy:"
