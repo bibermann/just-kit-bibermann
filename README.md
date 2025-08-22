@@ -70,8 +70,4 @@ by simply switching through `just pick`.
    ```
 
 2. In _this project_'s root, run `<just-kit directory>/setup`, e.g. `~/.just/kit/setup`.
-3. Select and confirm those options:
-   - `core`
-   - `pre-commit-with-uv`
-   - `uv-setup`
-4. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
+3. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).

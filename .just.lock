@@ -1,0 +1,3 @@
+pre-commit-with-uv.just # overrides core.just
+uv-setup.just # overrides core.just
+core.just
