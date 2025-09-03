@@ -15,13 +15,62 @@ import rich.panel
 console = rich.console.Console()
 
 
-def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR0912, PLR0915
+def print_with_highlighting(line: str):
+    # Define token-to-color mappings using Rich color names
+    color_mapping = {
+        "PASSED": "bright_green b",  # ANSI: \e[1;92m
+        "XPASS": "bright_green b",  # ANSI: \e[1;92m
+        "SKIPPED": "bright_yellow b",  # ANSI: \e[1;93m
+        "XFAIL": "bright_yellow b",  # ANSI: \e[1;93m
+        "WARNING": "bright_yellow b",  # ANSI: \e[1;93m
+        "FAILED": "bright_red b",  # ANSI: \e[1;91m
+        "ERROR": "bright_red b",  # ANSI: \e[1;91m
+        "INFO": "bright_black b",  # ANSI: \e[1;90m (gray)
+    }
+
+    # Find all tokens and their positions
+    tokens_found = [
+        (match.start(), match.end(), token, color)
+        for token, color in color_mapping.items()
+        for match in re.finditer(rf"\b{re.escape(token)}\b", line)
+    ]
+
+    # If no tokens found, just use rich.print as before
+    if not tokens_found:
+        rich.print(line)
+        return
+
+    # Sort tokens by position
+    tokens_found.sort(key=lambda x: x[0])
+
+    # Build the line with Rich markup for tokens
+    result_line = ""
+    last_pos = 0
+
+    for start, end, _, color in tokens_found:
+        # Add text before the token (unchanged)
+        result_line += line[last_pos:start]
+
+        # Add the token with Rich markup
+        result_line += f"[{color}]{line[start:end]}[/{color}]"
+        last_pos = end
+
+    # Add remaining text after the last token
+    result_line += line[last_pos:]
+
+    # Use rich.print which will handle both our markup and default highlighting
+    rich.print(result_line)
+
+
+def filter_pytest_output(test_name_with_path: str, lines: list[str]):  # noqa: C901, PLR0912, PLR0915
     """Filter pytest output for a specific test.
 
     Args:
-        test_name: Name of the test to filter for
+        test_name_with_path: Name of the test to filter for, e.g. "tests/unit/component/foo.py::Bar::test_something[some_param]"
         lines: Input data
     """
+    test_name = test_name_with_path.split("::", maxsplit=1)[-1]
+
     # Regex patterns
     begin_runs_regex = r"^==+ test session starts =="
     search_test_run_regex = rf"^(tests/.*::{re.escape(test_name).replace('::', r'(::|\.)')})(\s?.*)"
@@ -32,7 +81,7 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
     begin_short_summary_regex = r"^==+ short test summary info =="
     summary_test_regex = rf"^(ERROR|FAILED) tests/.*::{re.escape(test_name)}(?:\s|$)"
     summary_some_test_regex = r"^(ERROR|FAILED) tests/[^:]*::([^\s]+)(?:\s|$)"
-    summary_stats_regex = r"^==+ \d+ x?(failed|error|skipped|passed)"
+    summary_stats_regex = r"^=+ \d+ x?(failed|xfailed|error|skipped|passed|xpassed)"
 
     # State tracking
     in_test_runs: bool = False
@@ -80,7 +129,7 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
                 if re.match(print_test_run_until_regex, line):
                     printing_test_run = False
                 else:
-                    rich.print(line)
+                    print_with_highlighting(line)
                 continue
 
         # Handle summaries section
@@ -89,7 +138,7 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
             if re.match(search_test_summary_regex, line):
                 printing_test_summary = True
                 console.print(in_summaries, style="b bright_red")
-                rich.print(line)
+                print_with_highlighting(line)
                 continue
 
             # If we're printing a test summary, check if we should stop
@@ -98,7 +147,7 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
                     in_summaries = False
                     printing_test_summary = False
                 else:
-                    rich.print(line)
+                    print_with_highlighting(line)
                     continue
 
         if re.match(begin_short_summary_regex, line):
@@ -109,7 +158,7 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
             if re.match(summary_test_regex, line):
                 printing_test_summary = True
                 console.print(in_short_summaries, style="b bright_red")
-                rich.print(line)
+                print_with_highlighting(line)
                 continue
 
             if printing_test_summary:
@@ -117,16 +166,16 @@ def filter_pytest_output(test_name: str, lines: list[str]):  # noqa: C901, PLR09
                     in_short_summaries = False
                     printing_test_summary = False
                     continue
-                rich.print(line)
+                print_with_highlighting(line)
 
 
 def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR0915
     # Regex patterns
     begin_runs_regex = r"^==+ test session starts =="
-    search_test_run_regex = r"^tests/[^:]*::([^\s]+)(?:\s+(PASSED|ERROR|FAILED|SKIPPED)\s|\s|$)"
-    run_result_regex = r"^(PASSED|ERROR|FAILED|SKIPPED)\s"
+    search_test_run_regex = r"^(tests/[^:]*::[^\s]+)(?:\s+(PASSED|XPASS|ERROR|FAILED|XFAIL|SKIPPED)\s|\s|$)"
+    run_result_regex = r"^(PASSED|XPASS|ERROR|FAILED|XFAIL|SKIPPED)\s"
     print_test_run_until_regex = r"^(tests/.*::|==)"
-    summary_stats_regex = r"^==+ \d+ x?(failed|error|skipped|passed)"
+    summary_stats_regex = r"^=+ \d+ x?(failed|xfailed|error|skipped|passed|xpassed)"
 
     # State tracking
     runs_started = False
