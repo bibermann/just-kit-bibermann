@@ -172,8 +172,10 @@ def filter_pytest_output(test_name_with_path: str, lines: list[str]):  # noqa: C
 def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR0915
     # Regex patterns
     begin_runs_regex = r"^==+ test session starts =="
-    search_test_run_regex = r"^(tests/[^:]*::[^\s]+)(?:\s+(PASSED|XPASS|ERROR|FAILED|XFAIL|SKIPPED)\s|\s|$)"
-    run_result_regex = r"^(PASSED|XPASS|ERROR|FAILED|XFAIL|SKIPPED)\s"
+    search_test_run_regex = (
+        r"^(tests/[^:]*::[^\s]+)(?:\s+(PASSED|XPASS|ERROR|FAILED|XFAIL|SKIPPED|RERUN)(?:\s|$)|\s|$)"
+    )
+    run_result_regex = r"^(PASSED|XPASS|ERROR|FAILED|XFAIL|SKIPPED|RERUN)(?:\s|$)"
     print_test_run_until_regex = r"^(tests/.*::|==)"
     summary_stats_regex = r"^=+ \d+ x?(failed|xfailed|error|skipped|passed|xpassed)"
 
@@ -193,6 +195,8 @@ def intermediate_pytest_output(lines: list[str]):  # noqa: C901, PLR0912, PLR091
 
     def print_info(status: str, test_name: str):
         nonlocal passed_counter
+        if status == "RERUN":
+            return
         if status == "PASSED":
             passed_counter += 1
         else:
