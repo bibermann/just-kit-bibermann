@@ -36,7 +36,7 @@ git clone https://github.com/bibermann/just-kit-bibermann ~/.just/bibermann
    EXTRA_JUST_ROOTS="<just-kit directory>:<this project directory>"
    ```
 
-2. In an _example project_'s root, run `<just-kit directory>/setup`, e.g. `~/.just/kit/setup`.
+2. In an _example project_'s root, run `<just-kit directory>/link`, e.g. `~/.just/kit/link`.
 3. Select and confirm all `*.just` files you want to use from within the _example project_.
 
 Hints:
@@ -69,5 +69,5 @@ by simply switching through `just pick`.
    EXTRA_JUST_ROOTS="<just-kit directory>"
    ```
 
-2. In _this project_'s root, run `<just-kit directory>/setup`, e.g. `~/.just/kit/setup`.
+2. In _this project_'s root, run `<just-kit directory>/link`, e.g. `~/.just/kit/link`.
 3. Run `just _install-pre-commit` (or `just pre-commit` which will also run pre-commit).
