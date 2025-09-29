@@ -4,10 +4,16 @@ _check-node:
 
 [no-cd]
 [script]
-_setup-node-subproject RECREATE="true": _check-node _check-dot-env
+_bootstrap-node-env: _check-node _check-dot-env
     . "$HOME/.nvm/nvm.sh"
 
     nvm install --latest-npm
+
+[no-cd]
+[script]
+_install-node-project RECREATE="true":
+    . "$HOME/.nvm/nvm.sh"
+
     nvm use
     ! {{ RECREATE }} || ${OFFLINE:-false} || rm -rf node_modules
     npm i
@@ -15,6 +21,10 @@ _setup-node-subproject RECREATE="true": _check-node _check-dot-env
     echo
     echo 'NOTE: Please run `nvm use` before running npm commands.'
     echo 'NOTE: You need to run `nvm use` again if you start a new shell session.'
+
+[no-cd]
+_setup-node-project RECREATE="true": _bootstrap-node-env
+    @just _install-node-project '{{RECREATE}}'
 
 _check-justile-relevance:
     @[ -n "$(find . -name "package.json" -type f -print -quit)" ]

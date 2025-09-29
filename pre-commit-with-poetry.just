@@ -48,7 +48,7 @@ pre-commit-loop: _ensure-pre-commit
         git ls-files | entr -cd just pre-commit-changed || true
     done
 
-_install-pre-commit: (_setup-python-subproject "false")
+_install-pre-commit: (_setup-python-project "false")
     poetry run pre-commit install
 
 _ensure-pre-commit:
