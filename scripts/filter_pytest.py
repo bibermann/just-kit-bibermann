@@ -10,9 +10,11 @@ import typing
 
 import rich.box
 import rich.console
+import rich.markup
 import rich.panel
 
-console = rich.console.Console()
+console = rich.console.Console(emoji=False, markup=False)
+markup_console = rich.console.Console(emoji=False)
 
 
 def print_with_highlighting(line: str):
@@ -35,9 +37,9 @@ def print_with_highlighting(line: str):
         for match in re.finditer(rf"\b{re.escape(token)}\b", line)
     ]
 
-    # If no tokens found, just use rich.print as before
+    # If no tokens found, just use console.print as before
     if not tokens_found:
-        rich.print(line)
+        console.print(line)
         return
 
     # Sort tokens by position
@@ -49,17 +51,17 @@ def print_with_highlighting(line: str):
 
     for start, end, _, color in tokens_found:
         # Add text before the token (unchanged)
-        result_line += line[last_pos:start]
+        result_line += rich.markup.escape(line[last_pos:start])
 
         # Add the token with Rich markup
-        result_line += f"[{color}]{line[start:end]}[/{color}]"
+        result_line += f"[{color}]{rich.markup.escape(line[start:end])}[/{color}]"
         last_pos = end
 
     # Add remaining text after the last token
-    result_line += line[last_pos:]
+    result_line += rich.markup.escape(line[last_pos:])
 
     # Use rich.print which will handle both our markup and default highlighting
-    rich.print(result_line)
+    markup_console.print(result_line)
 
 
 def filter_pytest_output(test_name_with_path: str, lines: list[str]):  # noqa: C901, PLR0912, PLR0915
@@ -90,7 +92,7 @@ def filter_pytest_output(test_name_with_path: str, lines: list[str]):  # noqa: C
     in_short_summaries: typing.Literal[False] | str = False
     printing_test_summary: bool = False
 
-    rich.print(
+    console.print(
         rich.panel.Panel(
             test_name,
             style="b bright_red",
