@@ -1,3 +1,5 @@
+import '../core.just'
+
 [group: "hardware"]
 monitor *args:
     @cd /home/bibermann/scripts/set-monitor-configuration && poetry run app {{ args }}

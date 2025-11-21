@@ -1,3 +1,5 @@
+import 'core.just'
+
 [no-exit-message]
 _check-python: (_check-cmd "uv" "make")
 

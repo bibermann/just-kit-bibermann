@@ -1,3 +1,5 @@
+import 'core.just'
+
 # Sign on to AWS
 [no-exit-message]
 aws-login: (_check-cmd "aws") (_check-env "AWS_PROFILE")

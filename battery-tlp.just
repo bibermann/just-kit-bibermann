@@ -1,3 +1,5 @@
+import 'core.just'
+
 [group: "hardware"]
 bat-default: (_check-cmd "tlp")
     sudo tlp setcharge

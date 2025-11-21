@@ -1,3 +1,5 @@
+import 'core.just'
+
 [no-cd]
 [group: "system"]
 [positional-arguments]

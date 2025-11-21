@@ -1,4 +1,5 @@
 import 'docker.just'
+import 'core.just'
 
 docker-login: _check-docker (_check-env "DOCKER_REGISTRY" "DOCKER_USER" "DOCKER_PASS")
     docker login --username "$DOCKER_USER" --password "$DOCKER_PASS" "$DOCKER_REGISTRY"

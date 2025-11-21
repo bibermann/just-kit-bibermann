@@ -1,3 +1,5 @@
+import 'core.just'
+
 # Print GitLab CI/CD pipeline logs
 [no-cd]
 [group: "debug"]

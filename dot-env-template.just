@@ -1,3 +1,5 @@
+import 'core.just'
+
 ENV_TEMPLATE := ".env.template"
 REQUIRED_FILES := ""
 

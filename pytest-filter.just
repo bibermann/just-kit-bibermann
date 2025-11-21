@@ -1,3 +1,5 @@
+import 'core.just'
+
 # Filter pytest output for specific tests
 [no-cd]
 [group: "debug"]

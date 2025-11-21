@@ -1,3 +1,5 @@
+import 'core.just'
+
 [no-exit-message]
 _check-docker: (_check-cmd "docker")
     @( id -nG "$USER" | grep -qw "docker" ) || (echo >&2 "ERROR: Please add yourself to the docker group." && exit 1)

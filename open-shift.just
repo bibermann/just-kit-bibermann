@@ -1,3 +1,5 @@
+import 'core.just'
+
 [script]
 oc-login project: (_check-cmd "oc") (_check-env "OC_API" "OC_USER" "OC_PROXY")
     export HTTPS_PROXY="$OC_PROXY"

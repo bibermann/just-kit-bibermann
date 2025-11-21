@@ -1,3 +1,6 @@
+import 'uv-setup.just'
+import 'core.just'
+
 # Run pre-commit for all files
 [no-exit-message]
 [group: "dev"]
